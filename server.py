@@ -10,13 +10,16 @@ import aggdraw
 import urllib
 import json
 import random
+import dropbox
 
 
 
 
 
 def tweet(file,text):
-  """Send out the text as a tweet."""
+  
+
+  
   # Twitter authentication
   auth = tweepy.OAuthHandler(os.environ['C_KEY'], os.environ['C_SECRET'])
   auth.set_access_token(os.environ['A_TOKEN'], os.environ['A_TOKEN_SECRET'])
@@ -26,14 +29,28 @@ def tweet(file,text):
   # you should read the img directory and delete file after posting
   
 def tweet_image():
+    #url = 'https://cdn.glitch.com/c8f6cb80-020b-4743-b6ab-6e2bd79b5782%2Fcool-file.json?1520108773079'
+    #response = requests.get(url, stream=True)
+     #you shold be able to specify a path, check glitch support for writing to ASSETS or to .tmp folder
+    
+    #with open('cool.json', 'wb') as out_file:
+      #shutil.copyfileobj(response.raw, out_file)
+    dbx = dropbox.Dropbox(os.environ['A_TOKEN2'])
+    dbx.users_get_current_account()
+    dbx.files_download_to_file('/app/cool.json', '/Cavs vs Warriors/Game 5/cool-file.json')
   
-    images_response = requests.get('https://botwiki.org/corpora-api/')
-    the_images = images_response.json()
+    #images_response = open('cool.json').read()
+    #the_images = images_response.json()
+    #images_list = []
+    
+    images_response = open('cool.json').read()
+    the_images = json.loads(images_response)
     images_list = []
+
   
     for f in the_images["isms"]:
-      for k, v in f.iteritems():
-        images_list.append(v)
+      #for k, v in f.iteritems():
+        images_list.append(f)
 
     n = random.randint(0,len(images_list))
     the_image = images_list[n]
@@ -98,7 +115,7 @@ def tweet_image():
       im.save('/app/img.jpg')
       del response
     filename = 'img.jpg'
-    text = "no!"
+    text = "Yes!"
     
     return filename,text
 
